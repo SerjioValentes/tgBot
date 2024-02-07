@@ -39,38 +39,21 @@ const menu = new Menu("root-menu")
 const menuB = new Menu("root-menu")
 .text(`muneB`, (ctx) => ctx.reply(`done`));
 
-const menuC = new Menu("root-menu")
-.text(`muneC`, (ctx) => ctx.reply(`done C`));
-
 const settings = new Menu("about-bot")
 .text("Кто я такой?", (ctx) => ctx.reply("lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit anim id est laborum"))
+.url("t.me/Vasilkamalovbot/Photography", "web site");
 
   menu.register(settings);
   bot.use(menu);
 
 // ------------------------------------------------------------------ Handle the /start command.
-bot.command("start", async (ctx) => {
+bot.command(["start", "web"], async (ctx) => 
     // Send the menu.
     await ctx.reply("Тут есть информация которая тебе нужна?", { 
         // ------------------------------------------------------------------ Menu markup
         reply_markup: menu,
-    });
-  });
-
-  bot.command("menu", async (ctx) => {
-    // Send the menu.
-    await ctx.reply(`Check out this menu: ${ctx.from?.last_name} ${ctx?.from?.first_name}`, { 
-        // ------------------------------------------------------------------ Menu markup
-        reply_markup: {   
-              inline_keyboard: [
-                  // [{ text: 'Some button text 1', callback_data: (ctx: any) => ctx.reply("Hi!").row() }],
-                  [{ text: 'Some button text 2', callback_data: '2' }],
-                  [{ text: 'Some button text 3', callback_data: '3' }]
-              ]
-          },
-    });
-
-  });
+    }), async (ctx) => await ctx.reply("t.me/Vasilkamalovbot/Photography")
+)
 
   bot.on("message", (ctx) => {
     // console.log(ctx);
@@ -79,7 +62,7 @@ bot.command("start", async (ctx) => {
         reply_markup: menuB,
       })
      : 
-        (ctx.reply("Ну и это хорошо 2"), {
+        (ctx.reply("Ну и это хорошо 3"), {
           reply_markup: {   
             inline_keyboard: [
                 [{ text: 'Some button text 2', callback_data: '2' }],
@@ -95,3 +78,10 @@ bot.start();
 }
 start()
 
+
+// reply_markup: {   
+  //             inline_keyboard: [
+  //                 [{ text: 'Some button text 2', callback_data: '2' }],
+  //                 [{ text: 'Some button text 3', callback_data: '3' }]
+  //             ]
+  //         },
