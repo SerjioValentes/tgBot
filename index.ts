@@ -10,78 +10,41 @@ import 'dotenv/config'
 
 const bot = new Bot(process.env.TG_BOT_API_TOKEN || '');
 const start = async () => {
-    // --------------------------------------------------------------------------------TODO Typing any
+    await bot.api.setMyCommands([
+      { command: "start", description: "Start the bot" },
+      { command: "web", description: "Перейти на веб версию" },
+      { command: "about", description: "Немного текста об этом боте. Он родился в хорошей семье около года назад. Да он вспего годовалый, но вполне себе способный и умный" },
+    ]);
     type Context = any;
     type MyContext = Context & ConversationFlavor;
-    type MyConversation = Conversation<MyContext>;
 
-    // async function greeting(conversation: MyConversation, ctx: any) {
-    //     await ctx.reply("Hi there! What is your name?");
-    //     const { message } = await conversation.wait();
-    //     await ctx.reply(`Welcome to the chat, ${message.text}!`);
-    //   }
-    
-// const menu = async (ctx: any) => {
+  const articlesMenu = new Menu("root-menu")
+  .text("article", (ctx) => ctx.reply("Hi!"))
+  .text("article 2", (ctx) => ctx.reply("Hi!2"))
+  .text("article 3", (ctx) => ctx.reply("Hi!3"))
 
-    // const mainMenu = {   
-    //     inline_keyboard: [
-    //         // [{ text: 'Some button text 1', callback_data: (ctx: any) => ctx.reply("Hi!").row() }],
-    //         [{ text: 'Some button text 2', callback_data: '2' }],
-    //         [{ text: 'Some button text 3', callback_data: '3' }]
-    //     ]
-    // }
-//     return await ctx ? mainMenu : mainMenu
-// }
-const menu = new Menu("root-menu")
-.text(`Приветствую тебя мой друг`, (ctx) => ctx.reply(`${ctx.from?.last_name} + ${ctx?.from?.first_name}`))
-.submenu("О боте", "about-bot");
+const settings = new Menu("credits-menu")
+  .text("Show Credits", (ctx) => ctx.reply("Powered by grammY"))
+  .back("Go Back");
 
-const menuB = new Menu("root-menu")
-.text(`muneB`, (ctx) => ctx.reply(`done`));
+  articlesMenu.register(settings);
+  bot.use(settings);
 
-const settings = new Menu("about-bot")
-.text("Кто я такой?", (ctx) => ctx.reply("lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit anim id est laborum"))
-.url("t.me/Vasilkamalovbot/Photography", "web site");
-
-  menu.register(settings);
-  bot.use(menu);
 
 // ------------------------------------------------------------------ Handle the /start command.
-bot.command(["start", "web"], async (ctx) => 
-    // Send the menu.
-    await ctx.reply("Тут есть информация которая тебе нужна?", { 
-        // ------------------------------------------------------------------ Menu markup
-        reply_markup: menu,
-    }), async (ctx) => await ctx.reply("t.me/Vasilkamalovbot/Photography")
+bot.command("start", async (ctx) => 
+// ------------------------------------------------------------------  Send the menu
+    await ctx.reply("Here is your menu", { reply_markup: articlesMenu })
 )
 
+bot.command("web", async (ctx) => await ctx.reply("t.me/Vasilkamalovbot/Photography"))
+
   bot.on("message", (ctx) => {
-    // console.log(ctx);
     ctx.msg.text &&  ['нет', 'Нет', 'no', 'No'].includes(ctx.msg.text) ? 
-      (ctx.reply('ok'), {
-        reply_markup: menuB,
-      })
-     : 
-        (ctx.reply("Ну и это хорошо 3"), {
-          reply_markup: {   
-            inline_keyboard: [
-                [{ text: 'Some button text 2', callback_data: '2' }],
-                [{ text: 'Some button text 3', callback_data: '3' }]
-            ]
-        },
-      })
-      
+      ctx.reply('ok') : ctx.reply("Ну и это хорошо...")
   });
 
-// Start the bot.
+// ------------------------------------------------------------------ Start the bot.
 bot.start();    
 }
 start()
-
-
-// reply_markup: {   
-  //             inline_keyboard: [
-  //                 [{ text: 'Some button text 2', callback_data: '2' }],
-  //                 [{ text: 'Some button text 3', callback_data: '3' }]
-  //             ]
-  //         },
