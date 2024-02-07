@@ -7,7 +7,6 @@ const start = async () => {
     await bot.api.setMyCommands([
       { command: "start", description: "Меню сайта" },
       { command: "web", description: "Перейти на сайт" },
-      { command: "aboutme", description: "Я родился в хорошей семье около года назад. Да он вспего годовалый, но вполне себе способный и умный" },
     ]);
   
     // const menu = new Menu("menu")
