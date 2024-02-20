@@ -1,59 +1,32 @@
-import { Bot } from "grammy";
-import { Keyboard, InlineKeyboard } from "grammy";
-import { Menu } from "@grammyjs/menu";
-import 'dotenv/config'
-const bot = new Bot(process.env.TG_BOT_API_TOKEN || '');
-const start = async () => {
-    await bot.api.setMyCommands([
-      { command: "start", description: "Меню сайта" },
-      { command: "web", description: "Перейти на сайт" },
-    ]);
-  
-    // const menu = new Menu("menu")
-    // .text("О боте", (ctx) => ctx.reply("You pressed A!")).row()
-    // .text("О курсе", (ctx) => ctx.reply("You pressed B!")).row()
-    // .text("Начать обучение", (ctx) => ctx.reply("You pressed B!")).row();
 
-  const keyboard = new Keyboard()
-    .text("О боте").row()
-    .text("О курсе").row()
-    .text("Начать обучение").row();
-  
-  // const articlesMenu = new Menu("root-menu")
-  // .text("article", (ctx) => ctx.reply("Hi!"))
-  // .text("article 2", (ctx) => ctx.reply("Hi!2"))
-  // .text("article 3", (ctx) => ctx.reply("Hi!3"))
+const TelegramBot = require('node-telegram-bot-api');
+const express = require('express');
+const cors = require('cors');
 
-// const settings = new Menu("credits-menu")
-//   .text("Show Credits", (ctx) => ctx.reply("Powered by grammY"))
-//   .back("Go Back");
+const webAppUrl = 'https://tg-web-app-umber.vercel.app/';
 
-//   articlesMenu.register(settings);
-  // bot.use(settings);
+// const bot = new TelegramBot(process.env.TG_BOT_API_TOKEN, {polling: true});
+const bot = new TelegramBot('1269648125:AAECelgH3kADkBNW4Ejkavx2mimJFGmIIio', {polling: true});
+const app = express();
 
+app.use(express.json());
+app.use(cors());
 
-// ------------------------------------------------------------------ Handle the /start command.
-bot.command("start", async (ctx) => 
-// ------------------------------------------------------------------  Send the menu
-    await ctx.reply("Если вы не нашли нужной информации, можете написать мне", { reply_markup: keyboard })
-)
+bot.on('message', async (msg: any) => {
+    const chatId = msg.chat.id;
+    const text = msg.text;
 
-bot.command("web", async (ctx) => await ctx.reply("t.me/Vasilkamalovbot/Photography"))
+    if(text === '/start') {
+        await bot.sendMessage(chatId, 'Open url', {
+            reply_markup: {
+                keyboard: [
+                    [{text: 'Заполнить форму', web_app: {url: webAppUrl}}]
+                ]
+            }
+        })
+    }
+});
 
-bot.on("message", (ctx) => {
-  // const item = ctx.match;
-  const item = ctx.msg.text;
-  if(item === 'О боте'){
-    ctx.reply('Я родился в хорошей семье около года назад. Да он вспего годовалый, но вполне себе способный и умный')
-  }
-  if(item === 'О курсе'){
-    ctx.reply('О курсе много не напишешь. его нужно проходить')
-  }
+const PORT = 8000;
 
-  ctx.msg.text &&  ['нет', 'Нет', 'no', 'No'].includes(ctx.msg.text) && ctx.reply('ok')
-  });
-
-// ------------------------------------------------------------------ Start the bot.
-bot.start();    
-}
-start()
+app.listen(PORT, () => console.log('server started on PORT ' + PORT))
