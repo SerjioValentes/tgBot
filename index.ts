@@ -6,7 +6,7 @@ const cors = require('cors');
 const webAppUrl = 'https://tg-web-app-umber.vercel.app/';
 
 // const bot = new TelegramBot(process.env.TG_BOT_API_TOKEN, {polling: true});
-const bot = new TelegramBot('1269648125:AAECelgH3kADkBNW4Ejkavx2mimJFGmIIio', {polling: true});
+const bot = new TelegramBot('', {polling: true});
 const app = express();
 
 app.use(express.json());
